@@ -13,4 +13,7 @@ dependencies = [
     "pyjwt>=2.8.0",
     "cryptography>=41.0.0",
     "httpx>=0.25.0",
+    "redis>=5.0.0",
+    "aiokafka>=0.11.0",
+    "urllib3>=2.6.0",
 ]
