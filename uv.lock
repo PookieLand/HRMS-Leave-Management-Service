@@ -137,6 +137,28 @@ wheels = [
 ]
 
 [[package]]
+name = "confluent-kafka"
+version = "2.12.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c2/cd/18ffb1d2a7e189fee50b4a9597255e1078580d679daf913c25d0d13c3f88/confluent_kafka-2.12.2.tar.gz", hash = "sha256:5a50bfcd24f9dcf34b986f837f80126a71087364d44fcb8b45e8e74080fb6e98", size = 250423, upload-time = "2025-11-07T15:42:32.392Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e1/28/b209303f607288c10fcfa5521bbaa56a6e298c088d5ac658b811ff77555d/confluent_kafka-2.12.2-cp313-cp313-macosx_13_0_arm64.whl", hash = "sha256:e888667c607741af5e4b36014d215c4ad2f214646e3da777505e4cf383ac5375", size = 3163179, upload-time = "2025-11-07T15:41:51.611Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/4c/fee4d5c0f5e907bfbb48d3da329b66ede8c7aa0a3af42a269cee5c3e44d9/confluent_kafka-2.12.2-cp313-cp313-macosx_13_0_x86_64.whl", hash = "sha256:adc98ecfbb2a41a234c72043c0ca46c941d5da61900d998f14f29a30baa2e688", size = 3602455, upload-time = "2025-11-07T15:41:53.216Z" },
+    { url = "https://files.pythonhosted.org/packages/8c/c6/fe09a0683ef0bcf2c3b8df3b6827f1b4a95288c02bac1d93a154cddfb21c/confluent_kafka-2.12.2-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:d0abde08fc133cfe6667226472518c6afbb80e083090c441c4ae4cddcd8ed921", size = 3696185, upload-time = "2025-11-07T15:41:54.633Z" },
+    { url = "https://files.pythonhosted.org/packages/77/ed/23ae84c4ef04a38de36033a760b352fbbd51edee9e81d5c9f7c9eba18f09/confluent_kafka-2.12.2-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:b3065064a86b4494c8c94eff9968845461918a2bc89e5a800a2920f722ed2cb1", size = 3947823, upload-time = "2025-11-07T15:41:56.343Z" },
+    { url = "https://files.pythonhosted.org/packages/96/45/755cfc775d9f42ebd50507ab18ec2459ea06e0fc24be4f0829616c10539a/confluent_kafka-2.12.2-cp313-cp313-win_amd64.whl", hash = "sha256:26b2291694a300b7ff00b46eda835a06b124b4878527d32277d42ca39ee95dd9", size = 4128056, upload-time = "2025-11-07T15:41:57.787Z" },
+    { url = "https://files.pythonhosted.org/packages/50/76/5b093946777976ee7acf46cac73b9f5a648ad81c0b8b2d64684f0ac84962/confluent_kafka-2.12.2-cp314-cp314-macosx_13_0_arm64.whl", hash = "sha256:0101be4b6037ad5a49f71c749bfd9f24e82607774f5fb4424c4dee6bf39a302d", size = 3162999, upload-time = "2025-11-07T15:41:59.645Z" },
+    { url = "https://files.pythonhosted.org/packages/08/c4/67566514acb7ccdf77dd07633c9e47c52f9c087c1676faa6661147c70acc/confluent_kafka-2.12.2-cp314-cp314-macosx_13_0_x86_64.whl", hash = "sha256:27cc33a0c47f167db81b4f46d9e1c59582d9bfd8b3c21129a2ee400f5c93844e", size = 3602261, upload-time = "2025-11-07T15:42:01.571Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/3c/036b78024d93f293f1f09efe093ecc63a8c33d1f202e7126c56bbd3adb79/confluent_kafka-2.12.2-cp314-cp314-manylinux_2_28_aarch64.whl", hash = "sha256:38d23cf3f428451fc14c18aa53f5f3f1a37c7d89c44bfaf2862b3d6a5068e45c", size = 3696018, upload-time = "2025-11-07T15:42:03.147Z" },
+    { url = "https://files.pythonhosted.org/packages/e5/f0/2fa9456bdad9585360df5dc3089a70cc03988c9542667a1db123e618929f/confluent_kafka-2.12.2-cp314-cp314-manylinux_2_28_x86_64.whl", hash = "sha256:eed1b0e540204c52d0ab40d621c371f52044a788b542f6e28a7756fd8f7a1029", size = 3947575, upload-time = "2025-11-07T15:42:04.727Z" },
+    { url = "https://files.pythonhosted.org/packages/9a/22/ceb0ded4518f58805eff102d6c712809ae61dc0d6cfebcd4dba9246575ff/confluent_kafka-2.12.2-cp314-cp314-win_amd64.whl", hash = "sha256:ef411221bfdaffae944156826965b9a08777a5dff66d765a23108f7d6774706f", size = 4245477, upload-time = "2025-11-07T15:42:06.43Z" },
+    { url = "https://files.pythonhosted.org/packages/2b/d4/fa67b636df3550269e0720416ff9275783c3c5ddb83e7b366518a68501fd/confluent_kafka-2.12.2-cp314-cp314t-macosx_13_0_arm64.whl", hash = "sha256:d04f69f6c269ccf6ec1a2ec327edf977a06e790f631ede18511093c1fe598fef", size = 3161636, upload-time = "2025-11-07T15:42:07.938Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/25/ce8a5d5fbcda376cb55763a399cfec345a50d6e8bde12e135a05f3b6bc37/confluent_kafka-2.12.2-cp314-cp314t-macosx_13_0_x86_64.whl", hash = "sha256:01a0429cac8fe38db49ebb9bda335b0c77f14455da72ccf351d49a51c1bd00a5", size = 3600121, upload-time = "2025-11-07T15:42:09.407Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/91/87f15f79b1b2ca2debf4095e886b6f2d6d9071b30c2ef9d5d6414761d9bb/confluent_kafka-2.12.2-cp314-cp314t-manylinux_2_28_aarch64.whl", hash = "sha256:82ec5302cf7c9ea06d556ed8e8ea8422d2a60035b607d64579ca63663276fe9b", size = 3694893, upload-time = "2025-11-07T15:42:11.051Z" },
+    { url = "https://files.pythonhosted.org/packages/c6/20/e5d739aa776f4e92ab7a2c58a5250881352f8f0e0270aad0309c48ce33bb/confluent_kafka-2.12.2-cp314-cp314t-manylinux_2_28_x86_64.whl", hash = "sha256:de9dece5803e6b58d8c101cbceb90fa55ca96e0a5f40f10483a4c8f5f4027a69", size = 3946237, upload-time = "2025-11-07T15:42:14.147Z" },
+]
+
+[[package]]
 name = "cryptography"
 version = "46.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -500,6 +522,41 @@ wheels = [
 ]
 
 [[package]]
+name = "leave-management-service"
+version = "1.0.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "confluent-kafka" },
+    { name = "cryptography" },
+    { name = "fastapi", extra = ["all"] },
+    { name = "httpx" },
+    { name = "mysqlclient" },
+    { name = "pydantic-settings" },
+    { name = "pyjwt" },
+    { name = "python-dateutil" },
+    { name = "python-jose", extra = ["cryptography"] },
+    { name = "redis" },
+    { name = "sqlmodel" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "confluent-kafka", specifier = ">=2.3.0" },
+    { name = "cryptography", specifier = ">=41.0.0" },
+    { name = "fastapi", extras = ["all"], specifier = ">=0.119.0" },
+    { name = "httpx", specifier = ">=0.25.0" },
+    { name = "mysqlclient", specifier = ">=2.2.7" },
+    { name = "pydantic-settings", specifier = ">=2.0.0" },
+    { name = "pyjwt", specifier = ">=2.8.0" },
+    { name = "python-dateutil", specifier = ">=2.8.2" },
+    { name = "python-jose", extras = ["cryptography"], specifier = ">=3.3.0" },
+    { name = "redis", specifier = ">=5.0.0" },
+    { name = "sqlmodel", specifier = ">=0.0.27" },
+    { name = "uvicorn", specifier = ">=0.38.0" },
+]
+
+[[package]]
 name = "markdown-it-py"
 version = "4.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -762,6 +819,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e7/46/bd74733ff231675599650d3e47f361794b22ef3e3770998dda30d3b63726/pyjwt-2.10.1.tar.gz", hash = "sha256:3cc5772eb20009233caf06e9d8a0577824723b44e6648ee0a2aedb6cf9381953", size = 87785, upload-time = "2024-11-28T03:43:29.933Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/61/ad/689f02752eeec26aed679477e80e632ef1b682313be70793d798c1d5fc8f/PyJWT-2.10.1-py3-none-any.whl", hash = "sha256:dcdd193e30abefd5debf142f9adfcdd2b58004e644f25406ffaebd50bd98dacb", size = 22997, upload-time = "2024-11-28T03:43:27.893Z" },
+]
+
+[[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/66/c0/0c8b6ad9f17a802ee498c46e004a0eb49bc148f2fd230864601a86dcf6db/python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3", size = 342432, upload-time = "2024-03-01T18:36:20.211Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ec/57/56b9bcc3c9c6a792fcbaf139543cee77261f3651ca9da0c93f5c1221264b/python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427", size = 229892, upload-time = "2024-03-01T18:36:18.57Z" },
 ]
 
 [[package]]

@@ -74,7 +74,7 @@ router = APIRouter(
 
 
 @router.post("/me", response_model=LeavePublic, status_code=201)
-def create_leave_self_service(
+async def create_leave_self_service(
     leave: LeaveCreateSelf,
     session: SessionDep,
     current_user: Annotated[TokenData, Depends(require_employee)],
@@ -248,7 +248,7 @@ def get_my_leaves(
 
 
 @router.delete("/me/{leave_id}")
-def cancel_my_leave(
+async def cancel_my_leave(
     leave_id: int,
     session: SessionDep,
     current_user: Annotated[TokenData, Depends(require_employee)],
@@ -409,7 +409,7 @@ def get_pending_leaves(
 
 
 @router.post("/{leave_id}/approve", response_model=LeavePublic)
-def approve_leave(
+async def approve_leave(
     leave_id: int,
     request: LeaveApproveRequest,
     session: SessionDep,
@@ -503,7 +503,7 @@ def approve_leave(
 
 
 @router.post("/{leave_id}/reject", response_model=LeavePublic)
-def reject_leave(
+async def reject_leave(
     leave_id: int,
     request: LeaveRejectRequest,
     session: SessionDep,
