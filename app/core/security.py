@@ -1,6 +1,12 @@
 """
 Security module for JWT authentication using JWKS endpoint.
 Implements token validation, role/permission extraction for Asgardeo.
+
+Maps Asgardeo groups to internal roles according to RBAC architecture:
+- HR_Administrators → HR_Admin
+- HR_Managers → HR_Manager
+- Team_Managers → manager
+- Employees → employee
 """
 
 import json
@@ -29,18 +35,58 @@ jwks_client = PyJWKClient(
 )
 
 
+# Asgardeo group to role mapping (matches RBAC architecture)
+GROUP_TO_ROLE_MAPPING = {
+    "HR_Administrators": "HR_Admin",
+    "HR_Managers": "HR_Manager",
+    "Team_Managers": "manager",
+    "Employees": "employee",
+}
+
+
+def map_groups_to_roles(groups: list[str]) -> list[str]:
+    """
+    Map Asgardeo groups to internal roles.
+
+    Asgardeo doesn't support custom claims like 'roles', so we use groups
+    and map them to our role hierarchy.
+
+    Args:
+        groups: List of Asgardeo groups from JWT token
+
+    Returns:
+        List of mapped roles
+    """
+    roles = []
+    for group in groups:
+        # Remove leading slash if present (some Asgardeo configs add this)
+        clean_group = group.lstrip("/")
+
+        # Map group to role
+        if clean_group in GROUP_TO_ROLE_MAPPING:
+            role = GROUP_TO_ROLE_MAPPING[clean_group]
+            roles.append(role)
+            logger.debug(f"Mapped group '{clean_group}' to role '{role}'")
+        else:
+            logger.warning(f"Unknown Asgardeo group: '{clean_group}' - no role mapping")
+
+    return roles
+
+
 class TokenData(BaseModel):
     """
     Decoded token data structure.
     Contains user information, roles, and permissions from JWT.
+
+    Note: Roles are derived from Asgardeo groups using GROUP_TO_ROLE_MAPPING.
     """
 
     sub: str  # Subject (user ID)
     username: str | None = None
     email: str | None = None
-    roles: list[str] = []
+    roles: list[str] = []  # Mapped from groups
     permissions: list[str] = []
-    groups: list[str] = []
+    groups: list[str] = []  # Original Asgardeo groups
     iss: str | None = None  # Issuer
     aud: str | list[str] | None = None  # Audience
     exp: int | None = None  # Expiration
@@ -114,30 +160,24 @@ def decode_token(token: str) -> TokenData:
 
         logger.info(f"Token decoded successfully for subject: {payload.get('sub')}")
 
-        # Extract roles from various possible claim locations
-        roles = []
-        if "roles" in payload:
-            roles = (
-                payload["roles"]
-                if isinstance(payload["roles"], list)
-                else [payload["roles"]]
-            )
-        elif "role" in payload:
-            roles = (
-                payload["role"]
-                if isinstance(payload["role"], list)
-                else [payload["role"]]
-            )
-        elif "groups" in payload:
-            # Sometimes roles are in groups
+        # Extract groups from token
+        groups = []
+        if "groups" in payload:
             groups = (
                 payload["groups"]
                 if isinstance(payload["groups"], list)
                 else [payload["groups"]]
             )
-            roles = [g for g in groups if not g.startswith("/")]
 
-        # Extract permissions
+        # Map groups to roles using our RBAC architecture
+        roles = map_groups_to_roles(groups)
+
+        # Log the mapping for debugging
+        logger.info(
+            f"User {payload.get('email', payload.get('sub'))} - Groups: {groups} → Roles: {roles}"
+        )
+
+        # Extract permissions from token if present
         permissions = []
         if "permissions" in payload:
             permissions = (
@@ -150,23 +190,14 @@ def decode_token(token: str) -> TokenData:
             scopes = payload["scope"]
             permissions = scopes.split() if isinstance(scopes, str) else scopes
 
-        # Extract groups
-        groups = []
-        if "groups" in payload:
-            groups = (
-                payload["groups"]
-                if isinstance(payload["groups"], list)
-                else [payload["groups"]]
-            )
-
-        # Create TokenData object
+        # Create TokenData object with mapped roles
         token_data = TokenData(
             sub=payload.get("sub", ""),
             username=payload.get("username") or payload.get("preferred_username"),
             email=payload.get("email"),
-            roles=roles,
+            roles=roles,  # Mapped from groups
             permissions=permissions,
-            groups=groups,
+            groups=groups,  # Original Asgardeo groups
             iss=payload.get("iss"),
             aud=payload.get("aud"),
             exp=payload.get("exp"),

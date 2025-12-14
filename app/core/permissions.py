@@ -4,11 +4,18 @@ Leave Management Service - RBAC Permissions Module.
 Defines role-based access control (RBAC) logic for leave management operations.
 Integrates with Asgardeo groups and roles extracted from JWT tokens.
 
-Group Hierarchy:
-- Employees: Can manage their own leaves
-- Team-Managers: Can view and approve team member leaves
-- HR-Managers: Can view and approve any leave, access reports
-- HR-Administrators: Full access to all leave operations
+RBAC Architecture (matches RBAC_CHEATSHEET.md):
+- Asgardeo Groups → Internal Roles:
+  - HR_Administrators → HR_Admin (highest authority)
+  - HR_Managers → HR_Manager
+  - Team_Managers → manager
+  - Employees → employee (base role)
+
+Hierarchy:
+- HR_Admin: Full access to all leave operations
+- HR_Manager: Can view and approve any leave, access reports
+- manager: Can view and approve team member leaves
+- employee: Can manage their own leaves
 """
 
 from typing import Annotated
@@ -20,56 +27,83 @@ from app.core.security import TokenData, get_current_user
 
 logger = get_logger(__name__)
 
-# Define Asgardeo group names (case-sensitive)
+# Define Asgardeo group names (case-sensitive, with underscores)
 GROUP_EMPLOYEES = "Employees"
-GROUP_TEAM_MANAGERS = "Team-Managers"
-GROUP_HR_MANAGERS = "HR-Managers"
-GROUP_HR_ADMINISTRATORS = "HR-Administrators"
+GROUP_TEAM_MANAGERS = "Team_Managers"
+GROUP_HR_MANAGERS = "HR_Managers"
+GROUP_HR_ADMINISTRATORS = "HR_Administrators"
 
-# Manager and HR groups for quick checks
+# Define internal role names (mapped from groups)
+ROLE_EMPLOYEE = "employee"
+ROLE_MANAGER = "manager"
+ROLE_HR_MANAGER = "HR_Manager"
+ROLE_HR_ADMIN = "HR_Admin"
+
+# Manager and HR groups/roles for quick checks
 MANAGER_GROUPS = {GROUP_TEAM_MANAGERS, GROUP_HR_MANAGERS, GROUP_HR_ADMINISTRATORS}
 HR_GROUPS = {GROUP_HR_MANAGERS, GROUP_HR_ADMINISTRATORS}
 ADMIN_GROUPS = {GROUP_HR_ADMINISTRATORS}
 
+MANAGER_ROLES = {ROLE_MANAGER, ROLE_HR_MANAGER, ROLE_HR_ADMIN}
+HR_ROLES = {ROLE_HR_MANAGER, ROLE_HR_ADMIN}
+ADMIN_ROLES = {ROLE_HR_ADMIN}
+
 
 def is_employee(user: TokenData) -> bool:
     """
-    Check if user is an employee (has Employees group).
-    All users should have this as the base group.
+    Check if user is an employee (has Employees group or employee role).
+    All users should have this as the base group/role.
 
     Args:
         user: Authenticated user token data
 
     Returns:
-        True if user is in Employees group
+        True if user is in Employees group or has employee role
     """
-    return GROUP_EMPLOYEES in user.groups
+    return GROUP_EMPLOYEES in user.groups or ROLE_EMPLOYEE in user.roles
 
 
 def is_manager(user: TokenData) -> bool:
     """
-    Check if user is a manager (Team-Manager, HR-Manager, or HR-Administrator).
+    Check if user is a manager (manager, HR_Manager, or HR_Admin role).
 
     Args:
         user: Authenticated user token data
 
     Returns:
-        True if user is in any manager group
+        True if user is in any manager group or has manager role
     """
-    return bool(MANAGER_GROUPS & set(user.groups))
+    has_manager_group = bool(MANAGER_GROUPS & set(user.groups))
+    has_manager_role = bool(MANAGER_ROLES & set(user.roles))
+    return has_manager_group or has_manager_role
 
 
 def is_hr(user: TokenData) -> bool:
     """
-    Check if user is HR staff (HR-Manager or HR-Administrator).
+    Check if user is HR staff (HR_Manager or HR_Admin role).
 
     Args:
         user: Authenticated user token data
 
     Returns:
-        True if user is in HR groups
+        True if user is in HR groups or has HR role
     """
-    return bool(HR_GROUPS & set(user.groups))
+    has_hr_group = bool(HR_GROUPS & set(user.groups))
+    has_hr_role = bool(HR_ROLES & set(user.roles))
+
+    # Log for debugging
+    if has_hr_group or has_hr_role:
+        logger.debug(
+            f"User {user.email} - HR check passed. "
+            f"Groups: {user.groups}, Roles: {user.roles}"
+        )
+    else:
+        logger.debug(
+            f"User {user.email} - HR check failed. "
+            f"Groups: {user.groups}, Roles: {user.roles}"
+        )
+
+    return has_hr_group or has_hr_role
 
 
 def is_hr_admin(user: TokenData) -> bool:
@@ -80,9 +114,11 @@ def is_hr_admin(user: TokenData) -> bool:
         user: Authenticated user token data
 
     Returns:
-        True if user is HR Administrator
+        True if user is HR Administrator (has HR_Admin role or HR_Administrators group)
     """
-    return GROUP_HR_ADMINISTRATORS in user.groups
+    has_admin_group = GROUP_HR_ADMINISTRATORS in user.groups
+    has_admin_role = ROLE_HR_ADMIN in user.roles
+    return has_admin_group or has_admin_role
 
 
 def is_team_manager(user: TokenData) -> bool:
@@ -93,9 +129,11 @@ def is_team_manager(user: TokenData) -> bool:
         user: Authenticated user token data
 
     Returns:
-        True if user is Team Manager
+        True if user is Team Manager (has manager role or Team_Managers group)
     """
-    return GROUP_TEAM_MANAGERS in user.groups
+    has_team_manager_group = GROUP_TEAM_MANAGERS in user.groups
+    has_manager_role = ROLE_MANAGER in user.roles
+    return has_team_manager_group or has_manager_role
 
 
 def can_approve_leave(user: TokenData) -> bool:
@@ -200,7 +238,10 @@ def require_hr(user: Annotated[TokenData, Depends(get_current_user)]) -> TokenDa
         HTTPException: 403 if user is not HR
     """
     if not is_hr(user):
-        logger.warning(f"Access denied: User {user.email} is not HR")
+        logger.warning(
+            f"Access denied: User {user.email} is not HR. "
+            f"Groups: {user.groups}, Roles: {user.roles}"
+        )
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="HR access required",
