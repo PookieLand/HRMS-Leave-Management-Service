@@ -14,7 +14,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes.debug import router as debug_router
 from app.api.routes.leaves import router as leaves_router
 from app.core.cache import RedisClient
 from app.core.config import settings
@@ -102,7 +101,6 @@ app.add_middleware(
 
 # Include routers
 app.include_router(leaves_router, prefix="/api/v1")
-app.include_router(debug_router, prefix="/api/v1")
 
 
 # Health check endpoint
